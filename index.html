@@ -135,42 +135,17 @@
     color: rgba(244,235,221,0.4);
   }
 
-  /* ---- DOOR PANELS ---- */
-  .panel{
-    position:fixed;
-    top:0; bottom:0;
-    width:50%;
-    background: linear-gradient(180deg, #241009, var(--wine-deep));
-    z-index:5;
-    transition: transform 1.1s cubic-bezier(.7,0,.2,1);
-    display:flex;
-    align-items:center;
-    justify-content:center;
+  /* ---- TRANSITION: SCENE OUT ---- */
+  .scene{
+    transition: opacity .6s ease, transform .6s ease;
   }
-  .panel::after{
-    content:'';
+  body.open .scene{
+    opacity:0;
+    transform: scale(0.96);
+    pointer-events:none;
     position:absolute;
-    top:0; bottom:0;
-    width:1px;
-    background: var(--line);
+    visibility:hidden;
   }
-  .panel.left{ left:0; transform-origin:left; }
-  .panel.right{ right:0; transform-origin:right; }
-  .panel.left::after{ right:0; }
-  .panel.right::after{ left:0; }
-  .panel .mark{
-    font-family:'Fraunces', serif;
-    font-style:italic;
-    font-size:15px;
-    color: rgba(201,161,90,0.5);
-    letter-spacing:0.04em;
-  }
-  .panel.left .mark{ transform: rotate(-90deg); }
-  .panel.right .mark{ transform: rotate(90deg); }
-
-  body.open .panel.left{ transform: translateX(-100%); }
-  body.open .panel.right{ transform: translateX(100%); }
-  body.open .scene{ display:none; }
 
   /* ---- REVEAL: LISTINGS ---- */
   .reveal{
@@ -279,15 +254,12 @@
   }
 
   @media (prefers-reduced-motion: reduce){
-    .panel{ transition:none; }
+    .scene{ transition:none; }
     .reveal{ transition:none; }
   }
 </style>
 </head>
 <body>
-
-  <div class="panel left"><span class="mark">— entrá —</span></div>
-  <div class="panel right"><span class="mark">— entrá —</span></div>
 
   <div class="stage">
     <div class="scene">
