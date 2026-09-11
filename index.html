@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tu próxima puerta te espera</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --wine:#2B1210;
+    --wine-deep:#180907;
+    --brass:#C9A15A;
+    --brass-soft:#E3C98C;
+    --cream:#F4EBDD;
+    --line: rgba(244,235,221,0.18);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{
+    background: var(--wine-deep);
+    color: var(--cream);
+    font-family:'Manrope', sans-serif;
+    overflow-x:hidden;
+    min-height:100vh;
+  }
+  .stage{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:32px 20px;
+  }
+
+  /* ---- COUNTDOWN SCENE ---- */
+  .scene{
+    max-width:520px;
+    width:100%;
+    text-align:center;
+    position:relative;
+    z-index:2;
+  }
+  .kicker{
+    font-size:13px;
+    letter-spacing:0.06em;
+    color: var(--brass-soft);
+    margin-bottom:18px;
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size: clamp(34px, 7vw, 56px);
+    line-height:1.08;
+    color: var(--cream);
+    margin-bottom:10px;
+    font-style:italic;
+  }
+  h1 span{ font-style:normal; color:var(--brass); display:block; }
+  .sub{
+    color: rgba(244,235,221,0.65);
+    font-size:15px;
+    max-width:360px;
+    margin:0 auto 36px;
+    line-height:1.5;
+  }
+
+  .clock{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin-bottom:36px;
+    flex-wrap:wrap;
+  }
+  .unit{
+    background: rgba(244,235,221,0.04);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:16px 14px;
+    min-width:74px;
+  }
+  .unit b{
+    display:block;
+    font-family:'Fraunces', serif;
+    font-size:32px;
+    font-weight:500;
+    color:var(--brass-soft);
+    line-height:1;
+  }
+  .unit small{
+    display:block;
+    margin-top:8px;
+    font-size:10.5px;
+    letter-spacing:0.08em;
+    color: rgba(244,235,221,0.5);
+  }
+
+  .setup{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin-bottom:22px;
+  }
+  .setup input{
+    background: rgba(244,235,221,0.06);
+    border:1px solid var(--line);
+    border-radius:8px;
+    color: var(--cream);
+    padding:10px 12px;
+    font-family:'Manrope', sans-serif;
+    font-size:13px;
+    color-scheme: dark;
+  }
+
+  .door-btn{
+    appearance:none;
+    border:1px solid var(--brass);
+    background: transparent;
+    color: var(--brass-soft);
+    font-family:'Manrope', sans-serif;
+    font-weight:600;
+    font-size:13.5px;
+    letter-spacing:0.03em;
+    padding:15px 34px;
+    border-radius:999px;
+    cursor:pointer;
+    transition: background .25s ease, color .25s ease, transform .15s ease;
+  }
+  .door-btn:hover{ background: var(--brass); color: var(--wine-deep); }
+  .door-btn:active{ transform: scale(0.97); }
+  .door-btn:disabled{ opacity:0.35; cursor:not-allowed; }
+  .hint{
+    margin-top:14px;
+    font-size:11.5px;
+    color: rgba(244,235,221,0.4);
+  }
+
+  /* ---- DOOR PANELS ---- */
+  .panel{
+    position:fixed;
+    top:0; bottom:0;
+    width:50%;
+    background: linear-gradient(180deg, #241009, var(--wine-deep));
+    z-index:5;
+    transition: transform 1.1s cubic-bezier(.7,0,.2,1);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .panel::after{
+    content:'';
+    position:absolute;
+    top:0; bottom:0;
+    width:1px;
+    background: var(--line);
+  }
+  .panel.left{ left:0; transform-origin:left; }
+  .panel.right{ right:0; transform-origin:right; }
+  .panel.left::after{ right:0; }
+  .panel.right::after{ left:0; }
+  .panel .mark{
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-size:15px;
+    color: rgba(201,161,90,0.5);
+    letter-spacing:0.04em;
+  }
+  .panel.left .mark{ transform: rotate(-90deg); }
+  .panel.right .mark{ transform: rotate(90deg); }
+
+  body.open .panel.left{ transform: translateX(-100%); }
+  body.open .panel.right{ transform: translateX(100%); }
+  body.open .scene{ display:none; }
+
+  /* ---- REVEAL: LISTINGS ---- */
+  .reveal{
+    position:relative;
+    z-index:1;
+    max-width:920px;
+    margin:0 auto;
+    padding:70px 20px 90px;
+    opacity:0;
+    transition: opacity .7s ease .4s;
+  }
+  body.open .reveal{ opacity:1; }
+
+  .reveal-head{ text-align:center; margin-bottom:46px; }
+  .reveal-head .kicker{ color: var(--brass-soft); }
+  .reveal-head h2{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-style:italic;
+    font-size: clamp(28px,5vw,40px);
+    margin-bottom:10px;
+  }
+  .reveal-head p{
+    color: rgba(244,235,221,0.6);
+    font-size:14px;
+    max-width:420px;
+    margin:0 auto;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px,1fr));
+    gap:22px;
+  }
+  .card{
+    border:1px solid var(--line);
+    border-radius:14px;
+    overflow:hidden;
+    background: rgba(244,235,221,0.03);
+    transition: transform .25s ease, border-color .25s ease;
+  }
+  .card:hover{ transform: translateY(-4px); border-color: var(--brass); }
+  .card .img{
+    height:150px;
+    background: linear-gradient(135deg, #3a1c15, #1c0d08);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    color: rgba(227,201,140,0.35);
+    font-size:13px;
+  }
+  .card .body{ padding:18px; }
+  .card .tag{
+    font-size:10.5px;
+    letter-spacing:0.06em;
+    color: var(--brass-soft);
+    margin-bottom:8px;
+  }
+  .card h3{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:19px;
+    margin-bottom:6px;
+  }
+  .card p{
+    font-size:12.5px;
+    color: rgba(244,235,221,0.55);
+    margin-bottom:14px;
+    line-height:1.5;
+  }
+  .card .price{
+    font-weight:700;
+    font-size:14px;
+    color: var(--cream);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-top:1px solid var(--line);
+    padding-top:12px;
+  }
+  .card .price a{
+    color: var(--brass-soft);
+    text-decoration:none;
+    font-size:12px;
+    font-weight:600;
+    border:1px solid var(--brass);
+    padding:6px 12px;
+    border-radius:999px;
+  }
+
+  .cta-final{
+    text-align:center;
+    margin-top:46px;
+  }
+  .cta-final a{
+    display:inline-block;
+    background: var(--brass);
+    color: var(--wine-deep);
+    font-weight:700;
+    font-size:13.5px;
+    text-decoration:none;
+    padding:15px 30px;
+    border-radius:999px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .panel{ transition:none; }
+    .reveal{ transition:none; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="panel left"><span class="mark">— entrá —</span></div>
+  <div class="panel right"><span class="mark">— entrá —</span></div>
+
+  <div class="stage">
+    <div class="scene">
+      <div class="kicker">Próximo lanzamiento</div>
+      <h1>Detrás de esta puerta<span>hay una casa esperándote</span></h1>
+      <p class="sub">Configurá la fecha de lanzamiento de tu proyecto. Cuando el reloj llegue a cero — o cuando quieras mostrar un adelanto — tocá el botón y la puerta se abre.</p>
+
+      <div class="clock">
+        <div class="unit"><b id="d">00</b><small>DÍAS</small></div>
+        <div class="unit"><b id="h">00</b><small>HORAS</small></div>
+        <div class="unit"><b id="m">00</b><small>MIN</small></div>
+        <div class="unit"><b id="s">00</b><small>SEG</small></div>
+      </div>
+
+      <div class="setup">
+        <input type="date" id="targetDate">
+        <input type="time" id="targetTime">
+      </div>
+
+      <button class="door-btn" id="openBtn">Abrir la puerta</button>
+      <div class="hint">El botón se activa al llegar la fecha, o tocalo ahora para previsualizar.</div>
+    </div>
+  </div>
+
+  <div class="reveal">
+    <div class="reveal-head">
+      <div class="kicker">Ya está abierta</div>
+      <h2>Estas son las propiedades</h2>
+      <p>Elegidas para vos. Tocá "Ver más" para hablar directo con un asesor.</p>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="img">Foto de portada</div>
+        <div class="body">
+          <div class="tag">DEPARTAMENTO · 2 AMB</div>
+          <h3>Nombre del proyecto</h3>
+          <p>Zona, m², detalle breve del amenity o diferencial.</p>
+          <div class="price">USD 000.000 <a href="#">Ver más</a></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="img">Foto de portada</div>
+        <div class="body">
+          <div class="tag">CASA · 3 DORM</div>
+          <h3>Nombre del proyecto</h3>
+          <p>Zona, m², detalle breve del amenity o diferencial.</p>
+          <div class="price">USD 000.000 <a href="#">Ver más</a></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="img">Foto de portada</div>
+        <div class="body">
+          <div class="tag">DEPARTAMENTO · 1 AMB</div>
+          <h3>Nombre del proyecto</h3>
+          <p>Zona, m², detalle breve del amenity o diferencial.</p>
+          <div class="price">USD 000.000 <a href="#">Ver más</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-final">
+      <a href="#">Hablar por WhatsApp</a>
+    </div>
+  </div>
+
+<script>
+  const dEl=document.getElementById('d'), hEl=document.getElementById('h'),
+        mEl=document.getElementById('m'), sEl=document.getElementById('s');
+  const dateInput=document.getElementById('targetDate');
+  const timeInput=document.getElementById('targetTime');
+  const openBtn=document.getElementById('openBtn');
+
+  const now=new Date();
+  const defaultTarget=new Date(now.getTime()+3*24*60*60*1000);
+  dateInput.value=defaultTarget.toISOString().slice(0,10);
+  timeInput.value="18:00";
+
+  let target=getTarget();
+  let arrived=false;
+
+  function getTarget(){
+    const d=dateInput.value, t=timeInput.value || "00:00";
+    return new Date(`${d}T${t}:00`);
+  }
+
+  function pad(n){ return String(n).padStart(2,'0'); }
+
+  function tick(){
+    target=getTarget();
+    const diff=target-new Date();
+    if(diff<=0){
+      dEl.textContent="00"; hEl.textContent="00"; mEl.textContent="00"; sEl.textContent="00";
+      arrived=true;
+      openBtn.disabled=false;
+      openBtn.textContent="Abrir la puerta";
+      return;
+    }
+    const days=Math.floor(diff/86400000);
+    const hours=Math.floor((diff%86400000)/3600000);
+    const mins=Math.floor((diff%3600000)/60000);
+    const secs=Math.floor((diff%60000)/1000);
+    dEl.textContent=pad(days); hEl.textContent=pad(hours);
+    mEl.textContent=pad(mins); sEl.textContent=pad(secs);
+    arrived=false;
+  }
+
+  dateInput.addEventListener('change', tick);
+  timeInput.addEventListener('change', tick);
+  setInterval(tick,1000);
+  tick();
+
+  openBtn.addEventListener('click', ()=>{
+    document.body.classList.add('open');
+  });
+</script>
+
+</body>
+</html>
