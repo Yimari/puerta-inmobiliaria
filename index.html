@@ -146,6 +146,10 @@
     position:absolute;
     visibility:hidden;
   }
+  body.open .stage{
+    min-height:0;
+    padding:30px 20px 0;
+  }
 
   /* ---- REVEAL: LISTINGS ---- */
   .reveal{
@@ -347,6 +351,9 @@
 
   openBtn.addEventListener('click', ()=>{
     document.body.classList.add('open');
+    setTimeout(()=>{
+      document.querySelector('.reveal').scrollIntoView({behavior:'smooth', block:'start'});
+    }, 150);
   });
 
   // Galería de fotos
@@ -359,16 +366,30 @@
     '2adc2a50-c58e-45ac-a0c0-7990c2195ae8.jpg',
     '3a0090a9-94a4-444c-8943-404111f55b25.jpg',
     '4f6bd57b-2fcb-40cd-85d4-6464a3fa2f10%20%281%29.jpg',
-    '4f6bd57b-2fcb-40cd-85d4-6464a3fa2f10%20%282%29.jpg',
-    '4f6bd57b-2fcb-40cd-85d4-6464a3fa2f10.jpg',
     'a9610a7b-3a95-4384-931d-d1931d11c07d.jpg'
   ];
   let galleryIndex=0;
   const galleryImg=document.getElementById('galleryImg');
   const dotsWrap=document.getElementById('galleryDots');
 
+  // Ajustá acá el encuadre de cada foto si sale "mocha" o descentrada.
+  // Opciones comunes: 'center center', 'center top', 'center bottom',
+  // 'left center', 'right center', o un %: 'center 30%'
+  const galleryPositions=[
+    'center center', // 07064590...
+    'center center', // 1028afe7...
+    'center center', // 155a87c2...
+    'center center', // 26d14d86...
+    'center center', // 27275536...
+    'center center', // 2adc2a50...
+    'center center', // 3a0090a9...
+    'center center', // 4f6bd57b... (1)
+    'center center'  // a9610a7b...
+  ];
+
   function renderGallery(){
     galleryImg.style.backgroundImage=`url('${galleryImages[galleryIndex]}')`;
+    galleryImg.style.backgroundPosition=galleryPositions[galleryIndex] || 'center center';
     dotsWrap.innerHTML='';
     galleryImages.forEach((_,i)=>{
       const dot=document.createElement('span');
