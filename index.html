@@ -175,83 +175,63 @@
     margin:0 auto;
   }
 
-  .grid{
+  .property{
     display:grid;
-    grid-template-columns: repeat(auto-fit, minmax(230px,1fr));
-    gap:22px;
-  }
-  .card{
+    grid-template-columns: 1fr 1fr;
+    gap:0;
+    align-items:stretch;
     border:1px solid var(--line);
-    border-radius:14px;
+    border-radius:16px;
     overflow:hidden;
     background: rgba(244,235,221,0.03);
-    transition: transform .25s ease, border-color .25s ease;
   }
-  .card:hover{ transform: translateY(-4px); border-color: var(--brass); }
-  .card .img{
-    height:150px;
-    background: linear-gradient(135deg, #3a1c15, #1c0d08);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-family:'Fraunces', serif;
-    font-style:italic;
-    color: rgba(227,201,140,0.35);
-    font-size:13px;
-  }
-  .card .body{ padding:18px; }
-  .card .tag{
-    font-size:10.5px;
-    letter-spacing:0.06em;
-    color: var(--brass-soft);
-    margin-bottom:8px;
-  }
-  .card h3{
-    font-family:'Fraunces', serif;
-    font-weight:500;
-    font-size:19px;
-    margin-bottom:6px;
-  }
-  .card p{
-    font-size:12.5px;
-    color: rgba(244,235,221,0.55);
-    margin-bottom:14px;
-    line-height:1.5;
-  }
-  .card .price{
-    font-weight:700;
-    font-size:14px;
-    color: var(--cream);
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    border-top:1px solid var(--line);
-    padding-top:12px;
-  }
-  .card .price a{
-    color: var(--brass-soft);
-    text-decoration:none;
-    font-size:12px;
-    font-weight:600;
-    border:1px solid var(--brass);
-    padding:6px 12px;
-    border-radius:999px;
-  }
+  @media (max-width:720px){ .property{ grid-template-columns:1fr; } }
 
-  .cta-final{
-    text-align:center;
-    margin-top:46px;
+  .gallery{
+    position:relative;
+    aspect-ratio: 4/3;
+    background:#000;
   }
-  .cta-final a{
-    display:inline-block;
-    background: var(--brass);
-    color: var(--wine-deep);
-    font-weight:700;
-    font-size:13.5px;
-    text-decoration:none;
-    padding:15px 30px;
-    border-radius:999px;
+  .gallery-img{
+    width:100%; height:100%;
+    background-size:cover;
+    background-position:center;
   }
+  .gallery-arrow{
+    position:absolute; top:50%; transform:translateY(-50%);
+    background: rgba(24,9,7,0.55);
+    border:1px solid var(--line);
+    color:var(--cream);
+    width:38px; height:38px;
+    border-radius:50%;
+    cursor:pointer;
+    font-size:20px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .gallery-arrow.prev{ left:12px; }
+  .gallery-arrow.next{ right:12px; }
+  .gallery-arrow:hover{ background: var(--brass); color:var(--wine-deep); }
+  .gallery-dots{
+    position:absolute; bottom:12px; left:0; right:0;
+    display:flex; gap:6px; justify-content:center;
+  }
+  .gallery-dots span{
+    width:7px; height:7px; border-radius:50%;
+    background: rgba(244,235,221,0.35);
+    cursor:pointer;
+  }
+  .gallery-dots span.active{ background: var(--brass); }
+
+  .property-info{ padding:28px 30px 30px; }
+  .property-info .tag{ font-size:11px; letter-spacing:.06em; color:var(--brass-soft); margin-bottom:10px; }
+  .property-info h3{ font-family:'Fraunces', serif; font-weight:500; font-size:22px; margin-bottom:12px; line-height:1.3; }
+  .property-info .desc{ font-size:13.5px; color:rgba(244,235,221,0.65); line-height:1.6; margin-bottom:18px; }
+  .features{ list-style:none; margin-bottom:24px; }
+  .features li{ font-size:13px; color:rgba(244,235,221,0.75); padding:7px 0; border-top:1px solid var(--line); }
+  .features li:first-child{ border-top:none; }
+  .price-row{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px; border-top:1px solid var(--line); padding-top:18px; }
+  .price-big{ font-family:'Fraunces', serif; font-size:23px; color:var(--cream); font-weight:500; }
+  .wa-btn{ background:var(--brass); color:var(--wine-deep); text-decoration:none; font-weight:700; font-size:13px; padding:13px 22px; border-radius:999px; white-space:nowrap; }
 
   @media (prefers-reduced-motion: reduce){
     .scene{ transition:none; }
@@ -265,7 +245,7 @@
     <div class="scene">
       <div class="kicker">Próximo lanzamiento</div>
       <h1>Detrás de esta puerta<span>hay una casa esperándote</span></h1>
-      <p class="sub"> CONECTA CON LA MEJOR OPCIÓN PARA TI.</p>
+      <p class="sub">Configurá la fecha de lanzamiento de tu proyecto. Cuando el reloj llegue a cero — o cuando quieras mostrar un adelanto — tocá el botón y la puerta se abre.</p>
 
       <div class="clock">
         <div class="unit"><b id="d">00</b><small>DÍAS</small></div>
@@ -280,49 +260,42 @@
       </div>
 
       <button class="door-btn" id="openBtn">Abrir la puerta</button>
-      <div class="hint">TU NUEVA ZONA DE COMFORT TE ESPERA</div>
+      <div class="hint">El botón se activa al llegar la fecha, o tocalo ahora para previsualizar.</div>
     </div>
   </div>
 
   <div class="reveal">
     <div class="reveal-head">
       <div class="kicker">Ya está abierta</div>
-      <h2>Estas son las propiedades</h2>
-      <p>Elegidas para vos. Tocá "Ver más" para hablar directo con un asesor.</p>
+      <h2>Tu próximo hogar</h2>
+      <p>Recorré la galería y escribinos si te enamoraste.</p>
     </div>
 
-    <div class="grid">
-      <div class="card">
-        <div class="img">Foto de portada</div>
-        <div class="body">
-          <div class="tag">DEPARTAMENTO · 2 AMB</div>
-          <h3>Nombre del proyecto</h3>
-          <p>Zona, m², detalle breve del amenity o diferencial.</p>
-          <div class="price">USD 000.000 <a href="#">Ver más</a></div>
+    <div class="property">
+      <div class="gallery">
+        <div class="gallery-img" id="galleryImg"></div>
+        <button class="gallery-arrow prev" id="prevBtn" aria-label="Anterior">‹</button>
+        <button class="gallery-arrow next" id="nextBtn" aria-label="Siguiente">›</button>
+        <div class="gallery-dots" id="galleryDots"></div>
+      </div>
+      <div class="property-info">
+        <div class="tag">APARTAMENTO · 3 HABITACIONES</div>
+        <h3>Edificio Quinta Avenida, Cartagena</h3>
+        <p class="desc">Disfrutá de un espectacular apartamento de 120 m² con amplios espacios y buena iluminación. Una opción ideal para quienes buscan comodidad, seguridad y una excelente ubicación.</p>
+        <ul class="features">
+          <li>3 habitaciones — la principal con baño privado, jacuzzi y closet</li>
+          <li>2 baños en total</li>
+          <li>Amplia sala</li>
+          <li>Cuarto de servicio</li>
+          <li>Parque infantil</li>
+          <li>Parqueadero</li>
+          <li>Vigilancia privada 24/7</li>
+        </ul>
+        <div class="price-row">
+          <span class="price-big">$820.000.000</span>
+          <a class="wa-btn" href="https://wa.me/573181235432?text=Hola%2C%20quiero%20informaci%C3%B3n%20del%20apartamento%20en%20Edificio%20Quinta%20Avenida" target="_blank">Hablar por WhatsApp</a>
         </div>
       </div>
-      <div class="card">
-        <div class="img">Foto de portada</div>
-        <div class="body">
-          <div class="tag">CASA · 3 DORM</div>
-          <h3>Nombre del proyecto</h3>
-          <p>Zona, m², detalle breve del amenity o diferencial.</p>
-          <div class="price">USD 000.000 <a href="#">Ver más</a></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="img">Foto de portada</div>
-        <div class="body">
-          <div class="tag">DEPARTAMENTO · 1 AMB</div>
-          <h3>Nombre del proyecto</h3>
-          <p>Zona, m², detalle breve del amenity o diferencial.</p>
-          <div class="price">USD 000.000 <a href="#">Ver más</a></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="cta-final">
-      <a href="#">Hablar por WhatsApp</a>
     </div>
   </div>
 
@@ -375,6 +348,44 @@
   openBtn.addEventListener('click', ()=>{
     document.body.classList.add('open');
   });
+
+  // Galería de fotos
+  const galleryImages=[
+    '07064590-37bd-4e82-9ed0-a26f6e2ffd0f.jpg',
+    '1028afe7-f211-4ac8-b207-582d69bfa31d.jpg',
+    '155a87c2-f87f-4c01-9fb3-c0b44e3554b3.jpg',
+    '26d14d86-2294-4f5f-a53c-031e2741a08e.jpg',
+    '27275536-a5aa-40e9-aa2e-5bbfa921ac0b.jpg',
+    '2adc2a50-c58e-45ac-a0c0-7990c2195ae8.jpg',
+    '3a0090a9-94a4-444c-8943-404111f55b25.jpg',
+    '4f6bd57b-2fcb-40cd-85d4-6464a3fa2f10%20%281%29.jpg',
+    '4f6bd57b-2fcb-40cd-85d4-6464a3fa2f10%20%282%29.jpg',
+    '4f6bd57b-2fcb-40cd-85d4-6464a3fa2f10.jpg',
+    'a9610a7b-3a95-4384-931d-d1931d11c07d.jpg'
+  ];
+  let galleryIndex=0;
+  const galleryImg=document.getElementById('galleryImg');
+  const dotsWrap=document.getElementById('galleryDots');
+
+  function renderGallery(){
+    galleryImg.style.backgroundImage=`url('${galleryImages[galleryIndex]}')`;
+    dotsWrap.innerHTML='';
+    galleryImages.forEach((_,i)=>{
+      const dot=document.createElement('span');
+      if(i===galleryIndex) dot.classList.add('active');
+      dot.addEventListener('click', ()=>{ galleryIndex=i; renderGallery(); });
+      dotsWrap.appendChild(dot);
+    });
+  }
+  document.getElementById('prevBtn').addEventListener('click', ()=>{
+    galleryIndex=(galleryIndex-1+galleryImages.length)%galleryImages.length;
+    renderGallery();
+  });
+  document.getElementById('nextBtn').addEventListener('click', ()=>{
+    galleryIndex=(galleryIndex+1)%galleryImages.length;
+    renderGallery();
+  });
+  renderGallery();
 </script>
 
 </body>
